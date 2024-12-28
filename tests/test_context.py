@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import inspect
 from dataclasses import dataclass
 from typing import List

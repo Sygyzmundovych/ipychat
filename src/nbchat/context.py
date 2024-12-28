@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import ast
 import inspect
 from typing import Any, Dict, Optional

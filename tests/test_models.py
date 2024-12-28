@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import pytest
 
 from nbchat.models import get_current_model, get_model_by_name, get_models_by_provider

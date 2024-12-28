@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from unittest.mock import Mock, patch
 
 import pytest
@@ -25,30 +27,44 @@ def test_chat_config_display(magic, capsys):
         "openai": {
             "temperature": 0.7,
             "max_tokens": 2000,
+            "api_key": "test-key",
         },
     }
 
-    magic.chat_config("")
-    captured = capsys.readouterr()
-    assert "Current configuration:" in captured.out
-    assert "Provider: openai" in captured.out
-    assert "Model: gpt-4o" in captured.out
+    # Mock the select_with_arrows call
+    with patch("questionary.select") as mock_select:
+        mock_select.return_value.ask.return_value = "gpt-4o"
+
+        magic.chat_config("")
+
+        captured = capsys.readouterr()
+        assert "Current configuration:" in captured.out
+        assert "Provider: openai" in captured.out
+        assert "Model: gpt-4o" in captured.out
 
 
 def test_chat_config_model_change(magic):
     mock_provider = Mock()
     with (
         patch("nbchat.magic.get_provider") as mock_get_provider,
-        patch("nbchat.magic.select_with_arrows") as mock_select,
+        patch("questionary.select") as mock_select,
         patch("nbchat.magic.save_config") as mock_save,
     ):
         mock_get_provider.return_value = mock_provider
-        mock_select.return_value = "gpt-4o"
+        mock_select.return_value.ask.return_value = "gpt-4o"
 
-        # Initialize config if it doesn't exist
-        magic._config = {"current": {"provider": "openai", "model": "gpt-3.5-turbo"}}
+        magic._config = {
+            "current": {
+                "provider": "anthropic",
+                "model": "claude-3-5-sonnet-20240620",
+            },
+            "anthropic": {
+                "max_tokens": 2000,
+                "api_key": "test-key",
+            },
+        }
 
-        magic.chat_config("model")
+        magic.chat_config("")
 
         assert mock_select.called
         assert mock_save.called

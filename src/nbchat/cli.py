@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import sys
 
 import click
@@ -8,7 +10,7 @@ from rich.prompt import Confirm
 from traitlets.config import Config
 
 from .config import get_api_key_from_env, load_config, save_config
-from .models import AVAILABLE_MODELS, get_model_by_name, get_models_by_provider
+from .models import AVAILABLE_MODELS, get_model_by_name
 from .ui import display_model_table, select_with_arrows
 
 console = Console()
@@ -101,7 +103,7 @@ def start():
     sys.argv = [sys.argv[0]]
 
     console.print("Welcome to nbchat! Use %chat to interact with the AI assistant.")
-    console.print("You can change models using %chat_config model")
+    console.print("You can change models using %chat_config")
     start_ipython(config=c)
 
 

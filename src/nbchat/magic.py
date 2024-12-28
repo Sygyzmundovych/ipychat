@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from IPython.core.magic import Magics, line_magic, magics_class
 from rich.console import Console
 
@@ -26,46 +28,38 @@ class NBChatMagics(Magics):
     @line_magic
     def chat_config(self, line):
         """Configure chat parameters."""
-        args = line.split()
-        if not args:
-            # Display current configuration
-            current = self._config.get("current", {})
-            print("Current configuration:")
-            print(f"Provider: {current.get('provider')}")
-            print(f"Model: {current.get('model')}")
 
-            # Show OpenAI-specific settings only for OpenAI
-            if current.get("provider") == "openai":
-                openai_config = self._config.get("openai", {})
-                print(f"Temperature: {openai_config.get('temperature')}")
-                print(f"Max tokens: {openai_config.get('max_tokens')}")
+        current = self._config.get("current", {})
+        print("Current configuration:")
+        print(f"Provider: {current.get('provider')}")
+        print(f"Model: {current.get('model')}")
+
+        if current.get("provider") == "openai":
+            openai_config = self._config.get("openai", {})
+            print(f"Temperature: {openai_config.get('temperature')}")
+            print(f"Max tokens: {openai_config.get('max_tokens')}")
+
+        display_model_table()
+        model_names = [m.name for m in AVAILABLE_MODELS]
+        model_name = select_with_arrows(
+            "Which model would you like to use?",
+            model_names,
+        )
+
+        try:
+            model = get_model_by_name(model_name)
+            if "current" not in self._config:
+                self._config["current"] = {}
+
+            self._config["current"]["model"] = model.name
+            self._config["current"]["provider"] = model.provider
+
+            save_config(self._config)
+            self.provider = get_provider(self._config, self.debug)
+            print(f"Model changed to {model.name}")
+        except ValueError as e:
+            print(f"Error: {e}")
             return
-
-        param = args[0]
-        if param == "model":
-            # Show model selection interface
-            display_model_table()
-            model_names = [m.name for m in AVAILABLE_MODELS]
-            model_name = select_with_arrows(
-                "Which model would you like to use?",
-                model_names,
-            )
-
-            try:
-                model = get_model_by_name(model_name)
-                if "current" not in self._config:
-                    self._config["current"] = {}
-
-                self._config["current"]["model"] = model.name
-                self._config["current"]["provider"] = model.provider
-
-                # Reinitialize provider with new config
-                save_config(self._config)
-                self.provider = get_provider(self._config, self.debug)
-                print(f"Model changed to {model.name}")
-            except ValueError as e:
-                print(f"Error: {e}")
-                return
 
     def _handle_query(self, query: str):
         """Handle chat queries."""
