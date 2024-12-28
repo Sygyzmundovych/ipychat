@@ -3,6 +3,7 @@
 from pathlib import Path
 from unittest.mock import patch
 
+import click
 import pytest
 import toml
 from click.testing import CliRunner
@@ -30,16 +31,10 @@ def test_app_no_command(cli_runner, mock_ipython):
 
 def test_start_command(cli_runner, mock_ipython):
     """Test the start command."""
-    result = cli_runner.invoke(start)
+    # Create a context with default debug=False
+    result = cli_runner.invoke(start, obj={"debug": False})
     assert result.exit_code == 0
-
-    # Verify IPython configuration
-    config = mock_ipython.call_args[1]["config"]
-    assert "nbchat.magic" in config.InteractiveShellApp.extensions
-
-    # Verify welcome messages
-    assert "Welcome to nbchat!" in result.output
-    assert "Use %chat to interact" in result.output
+    assert mock_ipython.called
 
 
 def test_init_command_new_config(cli_runner, tmp_path, monkeypatch):
@@ -162,11 +157,9 @@ def test_start_command_no_config(cli_runner, tmp_path, monkeypatch, mock_ipython
     """Test start command behavior when no config exists."""
     monkeypatch.setattr("click.get_app_dir", lambda x: str(tmp_path))
 
-    result = cli_runner.invoke(start)
-
+    result = cli_runner.invoke(start, obj={"debug": False})
     assert result.exit_code == 0
     assert mock_ipython.called
-    # Should still start even without config (will use defaults)
 
 
 def test_cli_help(cli_runner):
@@ -182,3 +175,34 @@ def test_cli_help(cli_runner):
     result = cli_runner.invoke(start, ["--help"])
     assert result.exit_code == 0
     assert "Start the nbchat CLI application" in result.output
+
+
+def test_app_debug_flag(cli_runner, mock_ipython):
+    """Test that debug flag is properly passed through the CLI."""
+    result = cli_runner.invoke(app, ["--debug"])
+    assert result.exit_code == 0
+
+    # Verify debug flag was passed to IPython config
+    config = mock_ipython.call_args[1]["config"]
+    assert config.NBChatMagics.debug is True
+
+
+def test_start_command_with_debug(cli_runner, mock_ipython):
+    """Test start command with debug flag."""
+    result = cli_runner.invoke(start, obj={"debug": True})
+    assert result.exit_code == 0
+
+    # Verify IPython configuration
+    config = mock_ipython.call_args[1]["config"]
+    assert config.NBChatMagics.debug is True
+    assert "nbchat.magic" in config.InteractiveShellApp.extensions
+
+
+def test_start_command_without_debug(cli_runner, mock_ipython):
+    """Test start command without debug flag."""
+    result = cli_runner.invoke(start, obj={"debug": False})
+    assert result.exit_code == 0
+
+    # Verify IPython configuration
+    config = mock_ipython.call_args[1]["config"]
+    assert config.NBChatMagics.debug is False

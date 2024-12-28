@@ -2,6 +2,8 @@
 
 from IPython.core.magic import Magics, line_magic, magics_class
 from rich.console import Console
+from traitlets import Bool
+from traitlets.config.configurable import Configurable
 
 from .config import load_config, save_config
 from .context import get_context_for_variables
@@ -13,11 +15,13 @@ console = Console()
 
 
 @magics_class
-class NBChatMagics(Magics):
+class NBChatMagics(Magics, Configurable):
+    debug = Bool(False, help="Start nbchat in debug mode").tag(config=True)
+
     def __init__(self, shell):
-        super().__init__(shell)
+        Magics.__init__(self, shell)
+        Configurable.__init__(self, config=shell.config)
         self._config = load_config()
-        self.debug = True
         self.provider = get_provider(self._config, self.debug)
 
     @line_magic

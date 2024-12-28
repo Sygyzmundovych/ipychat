@@ -29,9 +29,14 @@ def get_api_key(provider: str) -> str:
 
 
 @click.group(invoke_without_command=True)
+@click.option("--debug", is_flag=True, help="Start nbchat in debug mode")
 @click.pass_context
-def app(ctx):
+def app(ctx, debug):
     """nbchat CLI application."""
+    # Store debug in the context
+    ctx.ensure_object(dict)
+    ctx.obj["debug"] = debug
+
     if ctx.invoked_subcommand is None:
         ctx.invoke(start)
 
@@ -94,11 +99,15 @@ def init():
     save_config(config)
 
 
-@app.command()
-def start():
+@app.command(hidden=True)
+@click.pass_context
+def start(ctx):
     """Start the nbchat CLI application."""
     c = Config()
     c.InteractiveShellApp.extensions = ["nbchat.magic"]
+    # Create a nested Config object for NBChatMagics
+    c.NBChatMagics = Config()
+    c.NBChatMagics.debug = ctx.obj["debug"]
 
     sys.argv = [sys.argv[0]]
 
