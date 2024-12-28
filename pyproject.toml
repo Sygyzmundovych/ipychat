@@ -29,5 +29,6 @@ nbchat = "nbchat.cli:app"
 [project.optional-dependencies]
 dev = [
     "pytest",
-    "twine"
+    "twine",
+    "build"
 ]
