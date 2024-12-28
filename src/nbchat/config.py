@@ -2,7 +2,7 @@
 
 import os
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional, Union
 
 import toml
 from click import get_app_dir
@@ -11,7 +11,7 @@ from rich.console import Console
 console = Console()
 
 
-def get_api_key_from_env(provider: str) -> str | None:
+def get_api_key_from_env(provider: str) -> Optional[str]:
     """Get API key from environment variable."""
     return os.getenv(f"{provider.upper()}_API_KEY")
 
