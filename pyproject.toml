@@ -1,0 +1,33 @@
+[project]
+name = "nbchat"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+authors = [{name = "Vinayak Mehta", email = "vmehta94@gmail.com"}]
+license = {text = "Apache-2.0"}
+requires-python = ">=3.10"
+classifiers = [
+    "License :: OSI Approved :: Apache Software License"
+]
+dependencies = [
+    "click"
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project.urls]
+Homepage = "https://github.com/vinayak-mehta/nbchat"
+Changelog = "https://github.com/vinayak-mehta/nbchat/releases"
+Issues = "https://github.com/vinayak-mehta/nbchat/issues"
+CI = "https://github.com/vinayak-mehta/nbchat/actions"
+
+[project.scripts]
+nbchat = "nbchat.cli:app"
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "twine"
+]
