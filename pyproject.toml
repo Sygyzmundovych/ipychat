@@ -7,10 +7,19 @@ authors = [{name = "Vinayak Mehta", email = "vmehta94@gmail.com"}]
 license = {text = "Apache-2.0"}
 requires-python = ">=3.10"
 classifiers = [
-    "License :: OSI Approved :: Apache Software License"
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
 ]
 dependencies = [
-    "click"
+    "click",
+    "rich>=10.0.0",
+    "questionary>=2.0.1",
+    "openai>=1.0.0",
+    "ipython<8.18.0",
+    "anthropic>=0.5.0",
+    "toml>=0.10.0",
 ]
 
 [build-system]
@@ -29,6 +38,7 @@ nbchat = "nbchat.cli:app"
 [project.optional-dependencies]
 dev = [
     "pytest",
+    "pytest-cov",
     "twine",
-    "build"
+    "build",
 ]
