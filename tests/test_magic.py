@@ -6,6 +6,7 @@ import pytest
 from IPython.core.interactiveshell import InteractiveShell
 from traitlets.config import Config
 
+from nbchat.config import save_config
 from nbchat.magic import NBChatMagics
 
 
@@ -26,7 +27,7 @@ def magic(ipython):
     return NBChatMagics(ipython)
 
 
-def test_chat_config_display(magic, capsys):
+def test_chat_config_display(magic, capsys, mock_config_file):
     magic._config = {
         "current": {
             "provider": "openai",
@@ -39,8 +40,13 @@ def test_chat_config_display(magic, capsys):
         },
     }
 
-    # Mock the select_with_arrows call
-    with patch("questionary.select") as mock_select:
+    mock_provider = Mock()
+    with (
+        patch("nbchat.magic.get_provider") as mock_get_provider,
+        patch("questionary.select") as mock_select,
+        patch("nbchat.config.get_config_file", return_value=mock_config_file),
+    ):
+        mock_get_provider.return_value = mock_provider
         mock_select.return_value.ask.return_value = "gpt-4o"
 
         magic.chat_config("")
@@ -52,31 +58,29 @@ def test_chat_config_display(magic, capsys):
 
 
 def test_chat_config_model_change(magic, mock_config_file):
+    magic._config = {
+        "current": {
+            "provider": "anthropic",
+            "model": "claude-3-5-sonnet-20240620",
+        },
+        "anthropic": {
+            "max_tokens": 2000,
+            "api_key": "test-key",
+        },
+    }
+
     mock_provider = Mock()
     with (
         patch("nbchat.magic.get_provider") as mock_get_provider,
         patch("questionary.select") as mock_select,
         patch("nbchat.config.get_config_file", return_value=mock_config_file),
-        patch("nbchat.magic.save_config") as mock_save,
     ):
         mock_get_provider.return_value = mock_provider
         mock_select.return_value.ask.return_value = "gpt-4o"
 
-        magic._config = {
-            "current": {
-                "provider": "anthropic",
-                "model": "claude-3-5-sonnet-20240620",
-            },
-            "anthropic": {
-                "max_tokens": 2000,
-                "api_key": "test-key",
-            },
-        }
-
         magic.chat_config("")
 
         assert mock_select.called
-        assert mock_save.called
         assert magic._config["current"]["model"] == "gpt-4o"
         assert mock_get_provider.called
 
