@@ -25,7 +25,7 @@ class NBChatMagics(Magics, Configurable):
         self.provider = get_provider(self._config, self.debug)
 
     @line_magic
-    def chat(self, line):
+    def ask(self, line):
         """Line magic for quick questions."""
         return self._handle_query(line)
 
@@ -84,4 +84,19 @@ class NBChatMagics(Magics, Configurable):
 
 def load_ipython_extension(ipython):
     """Load the extension in IPython."""
+    # Check if any magics already exist
+    magic_names = [
+        "ask",
+        "chat_config",
+    ]
+    existing_magics = [
+        name for name in magic_names if name in ipython.magics_manager.magics["line"]
+    ]
+
+    if existing_magics:
+        console.print(
+            f"[yellow]Warning: The following magic commands already exist: {', '.join(existing_magics)}"
+        )
+        console.print("They will be overridden by nbchat.[/yellow]")
+
     ipython.register_magics(NBChatMagics)

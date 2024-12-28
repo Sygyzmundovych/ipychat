@@ -111,7 +111,7 @@ def start(ctx):
 
     sys.argv = [sys.argv[0]]
 
-    console.print("Welcome to nbchat! Use %chat to interact with the AI assistant.")
+    console.print("Welcome to nbchat! Use %ask to chat with the AI assistant.")
     console.print("You can change models using %chat_config")
     start_ipython(config=c)
 
