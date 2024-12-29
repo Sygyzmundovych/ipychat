@@ -64,7 +64,7 @@ def config():
         else None
     )
     if existing_api_key:
-        if Confirm.ask(f"Found existing {provider} API key. Keep it?"):
+        if Confirm.ask(f"Found existing {provider} API key. Keep it?", default=True):
             api_key = existing_api_key
         else:
             api_key = get_api_key(provider)
@@ -105,14 +105,13 @@ def start(ctx):
     """Start the ipychat CLI application."""
     c = Config()
     c.InteractiveShellApp.extensions = ["ipychat.magic"]
-    # Create a nested Config object for IPyChatMagics
     c.IPyChatMagics = Config()
     c.IPyChatMagics.debug = ctx.obj["debug"]
 
     sys.argv = [sys.argv[0]]
 
     console.print("Welcome to ipychat! Use %ask to chat with the AI assistant.")
-    console.print("You can change models using %ipychat_config")
+    console.print("You can change models using %models.")
     start_ipython(config=c)
 
 

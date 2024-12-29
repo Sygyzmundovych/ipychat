@@ -30,7 +30,7 @@ class IPyChatMagics(Magics, Configurable):
         return self._handle_query(line)
 
     @line_magic
-    def ipychat_config(self):
+    def models(self, line):
         """Configure chat parameters."""
 
         current = self._config.get("current", {})
@@ -85,7 +85,7 @@ class IPyChatMagics(Magics, Configurable):
 def load_ipython_extension(ipython):
     """Load the extension in IPython."""
     # Check if any of our magics already exist
-    magic_names = ["ask", "ipychat_config"]
+    magic_names = ["ask", "models"]
     existing_magics = [
         name for name in magic_names if name in ipython.magics_manager.magics["line"]
     ]

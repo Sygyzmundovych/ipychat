@@ -31,7 +31,7 @@ def magic(ipython):
         return magic
 
 
-def test_ipychat_config_display(magic, capsys, mock_config_file):
+def test_models_display(magic, capsys, mock_config_file):
     magic._config = {
         "current": {
             "provider": "openai",
@@ -53,7 +53,7 @@ def test_ipychat_config_display(magic, capsys, mock_config_file):
         mock_get_provider.return_value = mock_provider
         mock_select.return_value.ask.return_value = "gpt-4o"
 
-        magic.ipychat_config()
+        magic.models("")
 
         captured = capsys.readouterr()
         assert "Current configuration:" in captured.out
@@ -82,7 +82,7 @@ def test_chat_config_model_change(magic, mock_config_file):
         mock_get_provider.return_value = mock_provider
         mock_select.return_value.ask.return_value = "gpt-4o"
 
-        magic.ipychat_config()
+        magic.models("")
 
         assert mock_select.called
         assert magic._config["current"]["model"] == "gpt-4o"

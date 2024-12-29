@@ -44,5 +44,3 @@ def save_config(config: Dict[str, Any]) -> None:
 
     with open(config_file, "w") as f:
         toml.dump(config, f)
-
-    console.print(f"\n[green]Configuration saved to {config_file}[/green]")
