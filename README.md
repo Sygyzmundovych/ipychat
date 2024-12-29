@@ -5,7 +5,7 @@
 **ipychat** is an AI IPython REPL that lets you understand, debug, and write better code faster.
 
 <p align="center">
-   <img src="https://raw.githubusercontent.com/vinayak-mehta/present/main/demo.gif" width="640">
+   <img src="demo.gif" width="640">
 </p>
 
 ## Features
