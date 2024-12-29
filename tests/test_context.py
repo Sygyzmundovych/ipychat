@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from nbchat.context import (
+from ipychat.context import (
     extract_variables_from_query,
     get_context_for_variables,
     get_variable_info,

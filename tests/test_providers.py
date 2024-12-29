@@ -4,9 +4,9 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from nbchat.providers import get_provider
-from nbchat.providers.anthropic import AnthropicProvider
-from nbchat.providers.openai import OpenAIProvider
+from ipychat.providers import get_provider
+from ipychat.providers.anthropic import AnthropicProvider
+from ipychat.providers.openai import OpenAIProvider
 
 
 def test_get_provider(mock_config):

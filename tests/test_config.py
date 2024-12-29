@@ -4,11 +4,11 @@ from pathlib import Path
 
 import toml
 
-from nbchat.config import get_api_key_from_env, load_config, save_config
+from ipychat.config import get_api_key_from_env, load_config, save_config
 
 
 def test_load_config(mock_config_file, monkeypatch):
-    monkeypatch.setattr("nbchat.config.get_config_file", lambda: mock_config_file)
+    monkeypatch.setattr("ipychat.config.get_config_file", lambda: mock_config_file)
     config = load_config()
     assert config["current"]["provider"] == "openai"
     assert config["openai"]["api_key"] == "test-openai-key"
@@ -16,7 +16,7 @@ def test_load_config(mock_config_file, monkeypatch):
 
 def test_save_config(tmp_path: Path, mock_config, monkeypatch):
     config_file = tmp_path / "config.toml"
-    monkeypatch.setattr("nbchat.config.get_config_file", lambda: config_file)
+    monkeypatch.setattr("ipychat.config.get_config_file", lambda: config_file)
 
     save_config(mock_config)
 

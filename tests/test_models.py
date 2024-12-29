@@ -2,7 +2,7 @@
 
 import pytest
 
-from nbchat.models import get_current_model, get_model_by_name, get_models_by_provider
+from ipychat.models import get_current_model, get_model_by_name, get_models_by_provider
 
 
 def test_get_model_by_name():
@@ -25,7 +25,7 @@ def test_get_models_by_provider():
 
 
 def test_get_current_model(mock_config, monkeypatch):
-    monkeypatch.setattr("nbchat.models.load_config", lambda: mock_config)
+    monkeypatch.setattr("ipychat.models.load_config", lambda: mock_config)
     model = get_current_model()
     assert model.name == "gpt-4o"
     assert model.provider == "openai"

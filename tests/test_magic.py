@@ -6,15 +6,14 @@ import pytest
 from IPython.core.interactiveshell import InteractiveShell
 from traitlets.config import Config
 
-from nbchat.config import save_config
-from nbchat.magic import NBChatMagics
+from ipychat.magic import IPyChatMagics
 
 
 @pytest.fixture
 def ipython():
     config = Config()
-    config.NBChatMagics = Config()
-    config.NBChatMagics.debug = False
+    config.IPyChatMagics = Config()
+    config.IPyChatMagics.debug = False
 
     # Create a new instance each time
     shell = InteractiveShell.clear_instance()
@@ -24,10 +23,15 @@ def ipython():
 
 @pytest.fixture
 def magic(ipython):
-    return NBChatMagics(ipython)
+    with patch("ipychat.magic.get_provider") as mock_get_provider:
+        mock_provider = Mock()
+        mock_get_provider.return_value = mock_provider
+        magic = IPyChatMagics(ipython)
+        magic.provider = mock_provider
+        return magic
 
 
-def test_chat_config_display(magic, capsys, mock_config_file):
+def test_ipychat_config_display(magic, capsys, mock_config_file):
     magic._config = {
         "current": {
             "provider": "openai",
@@ -42,14 +46,14 @@ def test_chat_config_display(magic, capsys, mock_config_file):
 
     mock_provider = Mock()
     with (
-        patch("nbchat.magic.get_provider") as mock_get_provider,
+        patch("ipychat.magic.get_provider") as mock_get_provider,
         patch("questionary.select") as mock_select,
-        patch("nbchat.config.get_config_file", return_value=mock_config_file),
+        patch("ipychat.config.get_config_file", return_value=mock_config_file),
     ):
         mock_get_provider.return_value = mock_provider
         mock_select.return_value.ask.return_value = "gpt-4o"
 
-        magic.chat_config()
+        magic.ipychat_config()
 
         captured = capsys.readouterr()
         assert "Current configuration:" in captured.out
@@ -71,14 +75,14 @@ def test_chat_config_model_change(magic, mock_config_file):
 
     mock_provider = Mock()
     with (
-        patch("nbchat.magic.get_provider") as mock_get_provider,
+        patch("ipychat.magic.get_provider") as mock_get_provider,
         patch("questionary.select") as mock_select,
-        patch("nbchat.config.get_config_file", return_value=mock_config_file),
+        patch("ipychat.config.get_config_file", return_value=mock_config_file),
     ):
         mock_get_provider.return_value = mock_provider
         mock_select.return_value.ask.return_value = "gpt-4o"
 
-        magic.chat_config()
+        magic.ipychat_config()
 
         assert mock_select.called
         assert magic._config["current"]["model"] == "gpt-4o"
@@ -107,66 +111,50 @@ def test_chat_query(magic):
     assert "test query" in args[1]
 
 
-def test_magic_debug_from_config():
+def test_magic_debug_from_config(ipython):
     """Test that debug flag is properly set from IPython config."""
     config = Config()
-    config.NBChatMagics = Config()
-    config.NBChatMagics.debug = True
+    config.IPyChatMagics = Config()
+    config.IPyChatMagics.debug = True
 
     shell = InteractiveShell.clear_instance()
     shell = InteractiveShell.instance(config=config)
 
-    # Initialize magic with debug config
-    magic = NBChatMagics(shell)
-    assert magic.debug is True
-
-    # Verify provider was initialized with debug flag
-    with patch("nbchat.magic.get_provider") as mock_get_provider:
-        magic = NBChatMagics(shell)
+    with patch("ipychat.magic.get_provider") as mock_get_provider:
+        magic = IPyChatMagics(shell)
+        assert magic.debug is True
         mock_get_provider.assert_called_with(magic._config, True)
 
 
-def test_magic_debug_affects_provider(ipython):
+def test_magic_debug_affects_provider(magic):
     """Test that debug setting affects provider behavior."""
     from IPython.core.history import HistoryManager
 
-    # Create a proper history manager
-    ipython.history_manager = HistoryManager(shell=ipython)
-    ipython.history_manager.input_hist_raw = ["", "command1"]
-
-    magic = NBChatMagics(ipython)
-
-    # Set up mock provider
-    mock_provider = Mock()
-    magic.provider = mock_provider
+    magic.shell.history_manager = HistoryManager(shell=magic.shell)
+    magic.shell.history_manager.input_hist_raw = ["", "command1"]
     magic.debug = True
 
-    # Test chat with debug enabled
     magic.ask("test query")
 
-    # Verify provider was used with debug info
-    assert mock_provider.stream_response.called
+    assert magic.provider.stream_response.called
     assert magic.debug is True
 
 
-def test_magic_debug_inheritance():
+def test_magic_debug_inheritance(ipython):
     """Test that debug setting is properly inherited from Configurable."""
-    # Create config with debug enabled
     config = Config()
-    config.NBChatMagics = Config()
-    config.NBChatMagics.debug = True
+    config.IPyChatMagics = Config()
+    config.IPyChatMagics.debug = True
 
-    # Create shell with config
     shell = InteractiveShell.clear_instance()
     shell = InteractiveShell.instance(config=config)
 
-    # Initialize magic
-    magic = NBChatMagics(shell)
-    assert magic.debug is True
+    with patch("ipychat.magic.get_provider"):
+        magic = IPyChatMagics(shell)
+        assert magic.debug is True
 
-    # Change config and verify it updates
-    config.NBChatMagics.debug = False
-    shell = InteractiveShell.clear_instance()
-    shell = InteractiveShell.instance(config=config)
-    magic = NBChatMagics(shell)
-    assert magic.debug is False
+        config.IPyChatMagics.debug = False
+        shell = InteractiveShell.clear_instance()
+        shell = InteractiveShell.instance(config=config)
+        magic = IPyChatMagics(shell)
+        assert magic.debug is False

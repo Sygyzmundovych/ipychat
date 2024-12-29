@@ -4,11 +4,11 @@ from unittest.mock import patch
 
 from rich.table import Table
 
-from nbchat.ui import display_model_table, select_with_arrows
+from ipychat.ui import display_model_table, select_with_arrows
 
 
 def test_display_model_table(capsys):
-    with patch("nbchat.ui.console.print") as mock_print:
+    with patch("ipychat.ui.console.print") as mock_print:
         display_model_table()
         assert mock_print.call_count == 1
         table = mock_print.call_args[0][0]

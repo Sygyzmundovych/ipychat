@@ -18,7 +18,7 @@ def get_api_key_from_env(provider: str) -> Optional[str]:
 
 def get_config_file() -> Path:
     """Get the path to the config file."""
-    config_dir = Path(get_app_dir("nbchat"))
+    config_dir = Path(get_app_dir("ipychat"))
     config_dir.mkdir(parents=True, exist_ok=True)
     return config_dir / "config.toml"
 

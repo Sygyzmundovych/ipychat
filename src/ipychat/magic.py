@@ -15,8 +15,8 @@ console = Console()
 
 
 @magics_class
-class NBChatMagics(Magics, Configurable):
-    debug = Bool(False, help="Start nbchat in debug mode").tag(config=True)
+class IPyChatMagics(Magics, Configurable):
+    debug = Bool(False, help="Start ipychat in debug mode").tag(config=True)
 
     def __init__(self, shell):
         Magics.__init__(self, shell)
@@ -30,7 +30,7 @@ class NBChatMagics(Magics, Configurable):
         return self._handle_query(line)
 
     @line_magic
-    def chat_config(self):
+    def ipychat_config(self):
         """Configure chat parameters."""
 
         current = self._config.get("current", {})
@@ -85,7 +85,7 @@ class NBChatMagics(Magics, Configurable):
 def load_ipython_extension(ipython):
     """Load the extension in IPython."""
     # Check if any of our magics already exist
-    magic_names = ["ask", "chat_config"]
+    magic_names = ["ask", "ipychat_config"]
     existing_magics = [
         name for name in magic_names if name in ipython.magics_manager.magics["line"]
     ]
@@ -94,6 +94,6 @@ def load_ipython_extension(ipython):
         console.print(
             f"[yellow]Warning: The following magic commands already exist: {', '.join(existing_magics)}"
         )
-        console.print("They will be overridden by nbchat.[/yellow]")
+        console.print("They will be overridden by ipychat.[/yellow]")
 
-    ipython.register_magics(NBChatMagics)
+    ipython.register_magics(IPyChatMagics)

@@ -29,10 +29,10 @@ def get_api_key(provider: str) -> str:
 
 
 @click.group(invoke_without_command=True)
-@click.option("--debug", is_flag=True, help="Start nbchat in debug mode")
+@click.option("--debug", is_flag=True, help="Start ipychat in debug mode")
 @click.pass_context
 def app(ctx, debug):
-    """nbchat CLI application."""
+    """ipychat CLI application."""
     # Store debug in the context
     ctx.ensure_object(dict)
     ctx.obj["debug"] = debug
@@ -42,11 +42,11 @@ def app(ctx, debug):
 
 
 @app.command()
-def init():
-    """Initialize nbchat configuration."""
-    existing_config = load_config()
+def config():
+    """Initialize ipychat configuration."""
+    ipychat_config = load_config()
 
-    console.print("\n[bold]Welcome to nbchat configuration[/bold]\n")
+    console.print("\n[bold]Welcome to ipychat configuration[/bold]\n")
     display_model_table()
 
     model_names = [m.name for m in AVAILABLE_MODELS]
@@ -59,8 +59,8 @@ def init():
     provider = model_config.provider
 
     existing_api_key = (
-        existing_config.get(provider, {}).get("api_key")
-        if provider in existing_config
+        ipychat_config.get(provider, {}).get("api_key")
+        if provider in ipychat_config
         else None
     )
     if existing_api_key:
@@ -71,48 +71,48 @@ def init():
     else:
         api_key = get_api_key(provider)
 
-    config = {
+    updated_ipychat_config = {
         "current": {
             "provider": provider,
             "model": model,
         },
         "openai": {
-            **(existing_config.get("openai", {})),
+            **(ipychat_config.get("openai", {})),
             "api_key": api_key
             if provider == "openai"
-            else existing_config.get("openai", {}).get("api_key"),
+            else ipychat_config.get("openai", {}).get("api_key"),
             "max_tokens": model_config.default_max_tokens
             if provider == "openai"
-            else existing_config.get("openai", {}).get("max_tokens"),
+            else ipychat_config.get("openai", {}).get("max_tokens"),
             "temperature": model_config.default_temperature
             if provider == "openai"
-            else existing_config.get("openai", {}).get("temperature"),
+            else ipychat_config.get("openai", {}).get("temperature"),
         },
         "anthropic": {
-            **(existing_config.get("anthropic", {})),
+            **(ipychat_config.get("anthropic", {})),
             "api_key": api_key
             if provider == "anthropic"
-            else existing_config.get("anthropic", {}).get("api_key"),
+            else ipychat_config.get("anthropic", {}).get("api_key"),
         },
     }
 
-    save_config(config)
+    save_config(updated_ipychat_config)
 
 
 @app.command(hidden=True)
 @click.pass_context
 def start(ctx):
-    """Start the nbchat CLI application."""
+    """Start the ipychat CLI application."""
     c = Config()
-    c.InteractiveShellApp.extensions = ["nbchat.magic"]
-    # Create a nested Config object for NBChatMagics
-    c.NBChatMagics = Config()
-    c.NBChatMagics.debug = ctx.obj["debug"]
+    c.InteractiveShellApp.extensions = ["ipychat.magic"]
+    # Create a nested Config object for IPyChatMagics
+    c.IPyChatMagics = Config()
+    c.IPyChatMagics.debug = ctx.obj["debug"]
 
     sys.argv = [sys.argv[0]]
 
-    console.print("Welcome to nbchat! Use %ask to chat with the AI assistant.")
-    console.print("You can change models using %chat_config")
+    console.print("Welcome to ipychat! Use %ask to chat with the AI assistant.")
+    console.print("You can change models using %ipychat_config")
     start_ipython(config=c)
 
 
