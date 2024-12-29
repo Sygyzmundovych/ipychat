@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 from pathlib import Path
 from typing import Any, Dict
 
@@ -27,6 +28,9 @@ def mock_config() -> Dict[str, Any]:
 @pytest.fixture
 def mock_config_file(tmp_path: Path, mock_config):
     import toml
+
+    os.environ["OPENAI_API_KEY"] = "test-openai-key"
+    os.environ["ANTHROPIC_API_KEY"] = "test-anthropic-key"
 
     config_file = tmp_path / "config.toml"
     with open(config_file, "w") as f:

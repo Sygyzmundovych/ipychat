@@ -9,7 +9,15 @@ from .base import BaseProvider
 
 class AnthropicProvider(BaseProvider):
     def initialize_client(self) -> None:
-        self.client = Anthropic(api_key=self.config.get("anthropic", {}).get("api_key"))
+        api_key = self.config.get("anthropic", {}).get("api_key")
+        if api_key is None or api_key == "":
+            self.console.print(
+                "[red]Set [bold]ANTHROPIC_API_KEY[/bold] in your environment, or run [bold]ipychat config[/bold].[/red]"
+            )
+            self.client = None
+            return
+
+        self.client = Anthropic(api_key=api_key)
         self.model = self.config["current"]["model"]
         self.max_tokens = self.config.get("anthropic", {}).get("max_tokens", 4000)
 

@@ -9,7 +9,15 @@ from .base import BaseProvider
 
 class OpenAIProvider(BaseProvider):
     def initialize_client(self) -> None:
-        self.client = OpenAI(api_key=self.config.get("openai", {}).get("api_key"))
+        api_key = self.config.get("openai", {}).get("api_key")
+        if api_key is None or api_key == "":
+            self.console.print(
+                "[red]Set [bold]OPENAI_API_KEY[/bold] in your environment, or run [bold]ipychat config[/bold].[/red]"
+            )
+            self.client = None
+            return
+
+        self.client = OpenAI(api_key=api_key)
         self.model = self.config["current"]["model"]
         self.max_tokens = self.config.get("openai", {}).get("max_tokens", 2000)
         self.temperature = self.config.get("openai", {}).get("temperature", 0.7)

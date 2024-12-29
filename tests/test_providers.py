@@ -49,3 +49,87 @@ def test_anthropic_provider_stream_chat(mock_config):
 
         responses = list(provider.stream_chat("system prompt", "user content"))
         assert responses == ["test response"]
+
+
+def test_openai_provider_missing_api_key(mock_config):
+    # Ensure console is properly mocked
+    mock_console = Mock()
+    mock_config["console"] = mock_console
+
+    # Test empty API key
+    mock_config["openai"] = {"api_key": ""}
+    provider = OpenAIProvider(mock_config)
+    provider.console = mock_console
+    provider.initialize_client()
+    assert provider.client is None
+    mock_console.print.assert_called_once_with(
+        "[red]Set [bold]OPENAI_API_KEY[/bold] in your environment, or run [bold]ipychat config[/bold].[/red]"
+    )
+
+    # Reset mock
+    mock_console.print.reset_mock()
+
+    # Test missing API key
+    mock_config["openai"] = {}
+    provider = OpenAIProvider(mock_config)
+    provider.console = mock_console
+    provider.initialize_client()
+    assert provider.client is None
+    mock_console.print.assert_called_once_with(
+        "[red]Set [bold]OPENAI_API_KEY[/bold] in your environment, or run [bold]ipychat config[/bold].[/red]"
+    )
+
+    # Reset mock
+    mock_console.print.reset_mock()
+
+    # Test missing openai config section
+    mock_config.pop("openai", None)
+    provider = OpenAIProvider(mock_config)
+    provider.console = mock_console
+    provider.initialize_client()
+    assert provider.client is None
+    mock_console.print.assert_called_once_with(
+        "[red]Set [bold]OPENAI_API_KEY[/bold] in your environment, or run [bold]ipychat config[/bold].[/red]"
+    )
+
+
+def test_anthropic_provider_missing_api_key(mock_config):
+    # Ensure console is properly mocked
+    mock_console = Mock()
+    mock_config["console"] = mock_console
+
+    # Test empty API key
+    mock_config["anthropic"] = {"api_key": ""}
+    provider = AnthropicProvider(mock_config)
+    provider.console = mock_console
+    provider.initialize_client()
+    assert provider.client is None
+    mock_console.print.assert_called_once_with(
+        "[red]Set [bold]ANTHROPIC_API_KEY[/bold] in your environment, or run [bold]ipychat config[/bold].[/red]"
+    )
+
+    # Reset mock
+    mock_console.print.reset_mock()
+
+    # Test missing API key
+    mock_config["anthropic"] = {}
+    provider = AnthropicProvider(mock_config)
+    provider.console = mock_console
+    provider.initialize_client()
+    assert provider.client is None
+    mock_console.print.assert_called_once_with(
+        "[red]Set [bold]ANTHROPIC_API_KEY[/bold] in your environment, or run [bold]ipychat config[/bold].[/red]"
+    )
+
+    # Reset mock
+    mock_console.print.reset_mock()
+
+    # Test missing anthropic config section
+    mock_config.pop("anthropic", None)
+    provider = AnthropicProvider(mock_config)
+    provider.console = mock_console
+    provider.initialize_client()
+    assert provider.client is None
+    mock_console.print.assert_called_once_with(
+        "[red]Set [bold]ANTHROPIC_API_KEY[/bold] in your environment, or run [bold]ipychat config[/bold].[/red]"
+    )

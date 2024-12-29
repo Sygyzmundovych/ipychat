@@ -56,6 +56,12 @@ class BaseProvider(ABC):
         """Stream responses with live display."""
         self.display_debug_info(system_prompt, user_content)
 
+        if self.client is None:
+            self.console.print(
+                f"[red]Set [bold]{self.config['current']['provider'].upper()}_API_KEY[/bold] in your environment, or run [bold]ipychat config[/bold].[/red]"
+            )
+            return
+
         full_response = ""
         with Live(RichMarkdown(""), refresh_per_second=10) as live:
             for content in self.stream_chat(system_prompt, user_content):
