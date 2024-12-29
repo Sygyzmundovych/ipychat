@@ -5,7 +5,7 @@
 **ipychat** is an AI IPython REPL that lets you understand, debug, and write better code faster.
 
 <p align="center">
-   <img src="demo.gif" width="640">
+   <img src="https://raw.githubusercontent.com/vinayak-mehta/present/main/demo.gif" width="640">
 </p>
 
 ## Features
@@ -14,6 +14,14 @@
 - **Rich Output**: Markdown-formatted responses with syntax highlighting
 - **Multiple AI Models**: Supports GPT-4o and Claude 3.5 Sonnet. Local models coming soon.
 - **Interactive Configuration**: Easy model switching and configuration through magic commands
+
+## Installation
+
+You can install `ipychat` using pip:
+
+```python
+$ pip install ipychat
+```
 
 ## Usage
 
@@ -45,14 +53,6 @@ You can change the current model using the `%models` magic.
 In [1]: %models
 ```
 
-## Installation
-
-You can install `ipychat` using pip:
-
-```python
-$ pip install ipychat
-```
-
 ## Configuration
 
 Based on the model you want to use, either set `OPENAI_API_KEY`, or `ANTHROPIC_API_KEY`, or both environment variables. You can also run `ipychat config` to configure `ipychat` interactively.
@@ -61,6 +61,10 @@ Based on the model you want to use, either set `OPENAI_API_KEY`, or `ANTHROPIC_A
 
 Contributions are welcome! Please feel free to submit a pull request.
 
+## Versioning
+
+`ipychat` uses [Semantic Versioning](https://semver.org/). For the available versions, see the tags on the GitHub repository.
+
 ## License
 
-This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the Apache License, see the [LICENSE](https://github.com/vinayak-mehta/ipychat/blob/master/LICENSE) file for details.
