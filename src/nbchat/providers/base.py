@@ -52,7 +52,7 @@ class BaseProvider(ABC):
         )
         self.console.print()
 
-    def stream_with_display(self, system_prompt: str, user_content: str) -> None:
+    def stream_response(self, system_prompt: str, user_content: str) -> None:
         """Stream responses with live display."""
         self.display_debug_info(system_prompt, user_content)
 

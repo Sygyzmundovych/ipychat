@@ -49,7 +49,7 @@ def test_chat_config_display(magic, capsys, mock_config_file):
         mock_get_provider.return_value = mock_provider
         mock_select.return_value.ask.return_value = "gpt-4o"
 
-        magic.chat_config("")
+        magic.chat_config()
 
         captured = capsys.readouterr()
         assert "Current configuration:" in captured.out
@@ -78,7 +78,7 @@ def test_chat_config_model_change(magic, mock_config_file):
         mock_get_provider.return_value = mock_provider
         mock_select.return_value.ask.return_value = "gpt-4o"
 
-        magic.chat_config("")
+        magic.chat_config()
 
         assert mock_select.called
         assert magic._config["current"]["model"] == "gpt-4o"
@@ -87,7 +87,7 @@ def test_chat_config_model_change(magic, mock_config_file):
 
 def test_chat_query(magic):
     mock_provider = Mock()
-    mock_provider.stream_with_display.return_value = ["Mock response"]
+    mock_provider.stream_response.return_value = ["Mock response"]
     magic.provider = mock_provider
 
     # Create a proper mock for the shell and history manager
@@ -100,10 +100,10 @@ def test_chat_query(magic):
         "command2",
     ]  # First entry is empty
 
-    magic.chat("test query")
+    magic.ask("test query")
 
-    assert mock_provider.stream_with_display.called
-    args = mock_provider.stream_with_display.call_args[0]
+    assert mock_provider.stream_response.called
+    args = mock_provider.stream_response.call_args[0]
     assert "test query" in args[1]
 
 
@@ -142,10 +142,10 @@ def test_magic_debug_affects_provider(ipython):
     magic.debug = True
 
     # Test chat with debug enabled
-    magic.chat("test query")
+    magic.ask("test query")
 
     # Verify provider was used with debug info
-    assert mock_provider.stream_with_display.called
+    assert mock_provider.stream_response.called
     assert magic.debug is True
 
 

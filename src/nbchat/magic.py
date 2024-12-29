@@ -30,7 +30,7 @@ class NBChatMagics(Magics, Configurable):
         return self._handle_query(line)
 
     @line_magic
-    def chat_config(self, line):
+    def chat_config(self):
         """Configure chat parameters."""
 
         current = self._config.get("current", {})
@@ -78,17 +78,14 @@ class NBChatMagics(Magics, Configurable):
         system_prompt = "You are a helpful principal engineer and principal data scientist with access to the current IPython environment."
         user_content = f"Recent IPython history:\n{''.join(history[-5:])}\n\nContext:\n{context}\n\nQuestion: {query}"
 
-        self.provider.stream_with_display(system_prompt, user_content)
+        self.provider.stream_response(system_prompt, user_content)
         return None
 
 
 def load_ipython_extension(ipython):
     """Load the extension in IPython."""
-    # Check if any magics already exist
-    magic_names = [
-        "ask",
-        "chat_config",
-    ]
+    # Check if any of our magics already exist
+    magic_names = ["ask", "chat_config"]
     existing_magics = [
         name for name in magic_names if name in ipython.magics_manager.magics["line"]
     ]

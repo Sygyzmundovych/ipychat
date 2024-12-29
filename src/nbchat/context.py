@@ -7,7 +7,12 @@ from typing import Any, Dict, Optional
 
 def extract_variables_from_query(query: str) -> set:
     """Extract potential variable names from the query string."""
-    words = set(query.split())
+    # Only consider words that look like valid Python identifiers
+    words = set()
+    for word in query.split():
+        # Check if word could be a valid Python identifier
+        if word.isidentifier():
+            words.add(word)
     return words
 
 
@@ -76,13 +81,15 @@ def get_variable_info(name: str, value: Any) -> str:
 
 def get_context_for_variables(namespace: Dict[str, Any], query: str) -> str:
     """Extract relevant context from the user's namespace based on the query."""
-    mentioned_vars = extract_variables_from_query(query)
+    # Filter namespace to only include actual variables (non-private)
+    filtered_namespace = {k: v for k, v in namespace.items() if not k.startswith("_")}
 
+    mentioned_vars = extract_variables_from_query(query)
     context_parts = []
 
     for var_name in mentioned_vars:
-        if var_name in namespace:
-            var = namespace[var_name]
+        if var_name in filtered_namespace:
+            var = filtered_namespace[var_name]
             context_parts.append(get_variable_info(var_name, var))
 
     return "\n".join(context_parts)
