@@ -1,7 +1,7 @@
 [project]
 name = "ipychat"
 version = "0.2.0"
-description = ""
+description = "The AI IPython"
 readme = "README.md"
 authors = [{name = "Vinayak Mehta", email = "vmehta94@gmail.com"}]
 license = {text = "Apache-2.0"}
