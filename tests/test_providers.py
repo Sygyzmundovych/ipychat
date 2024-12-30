@@ -6,6 +6,7 @@ import pytest
 
 from ipychat.providers import get_provider
 from ipychat.providers.anthropic import AnthropicProvider
+from ipychat.providers.google import GoogleProvider
 from ipychat.providers.openai import OpenAIProvider
 
 
@@ -132,4 +133,46 @@ def test_anthropic_provider_missing_api_key(mock_config):
     assert provider.client is None
     mock_console.print.assert_called_once_with(
         "[red]Set [bold]ANTHROPIC_API_KEY[/bold] in your environment, or run [bold]ipychat config[/bold].[/red]"
+    )
+
+
+def test_google_provider_missing_api_key(mock_config):
+    # Ensure console is properly mocked
+    mock_console = Mock()
+    mock_config["console"] = mock_console
+
+    # Test empty API key
+    mock_config["google"] = {"api_key": ""}
+    provider = GoogleProvider(mock_config)
+    provider.console = mock_console
+    provider.initialize_client()
+    assert provider.client is None
+    mock_console.print.assert_called_once_with(
+        "[red]Set [bold]GOOGLE_API_KEY[/bold] in your environment, or run [bold]ipychat config[/bold].[/red]"
+    )
+
+    # Reset mock
+    mock_console.print.reset_mock()
+
+    # Test missing API key
+    mock_config["google"] = {}
+    provider = GoogleProvider(mock_config)
+    provider.console = mock_console
+    provider.initialize_client()
+    assert provider.client is None
+    mock_console.print.assert_called_once_with(
+        "[red]Set [bold]GOOGLE_API_KEY[/bold] in your environment, or run [bold]ipychat config[/bold].[/red]"
+    )
+
+    # Reset mock
+    mock_console.print.reset_mock()
+
+    # Test missing anthropic config section
+    mock_config.pop("google", None)
+    provider = GoogleProvider(mock_config)
+    provider.console = mock_console
+    provider.initialize_client()
+    assert provider.client is None
+    mock_console.print.assert_called_once_with(
+        "[red]Set [bold]GOOGLE_API_KEY[/bold] in your environment, or run [bold]ipychat config[/bold].[/red]"
     )

@@ -51,6 +51,8 @@ def config():
     }
 
     api_key = get_api_key(provider, ipychat_config)
+    if provider not in ipychat_config:
+        ipychat_config[provider] = {}
     ipychat_config[provider]["api_key"] = api_key
 
     save_config(ipychat_config)
