@@ -1,0 +1,35 @@
+name: Tests
+
+on:
+  workflow_dispatch:
+  push:
+
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.13'
+
+    - name: Install the latest version of uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        version: "latest"
+
+    - name: Install dependencies
+      run: |
+        uv pip install -e '.[dev]'
+
+    - name: Check formatting with Ruff
+      run: |
+        ruff format --check .
+
+    - name: Run tests
+      run: |
+        pytest tests/ -v --cov=ipychat
