@@ -1,6 +1,6 @@
 [project]
 name = "ipychat"
-version = "0.1.1"
+version = "0.2.0"
 description = ""
 readme = "README.md"
 authors = [{name = "Vinayak Mehta", email = "vmehta94@gmail.com"}]
@@ -16,10 +16,11 @@ dependencies = [
     "click",
     "rich>=10.0.0",
     "questionary>=2.0.1",
-    "openai>=1.0.0",
     "ipython<8.18.0",
-    "anthropic>=0.5.0",
     "toml>=0.10.0",
+    "openai>=1.0.0",
+    "anthropic>=0.5.0",
+    "google-generativeai>=0.8.3",
 ]
 
 [build-system]
@@ -37,8 +38,13 @@ ipychat = "ipychat.cli:app"
 
 [project.optional-dependencies]
 dev = [
+    "ruff",
     "pytest",
     "pytest-cov",
     "twine",
     "build",
+]
+test = [
+    "pandas",
+    "numpy",
 ]

@@ -81,6 +81,10 @@ def test_get_api_key_from_prompt(mock_config, monkeypatch):
     mock_config["openai"]["api_key"] = ""
     mock_password = MagicMock()
     mock_password.ask.return_value = "prompt-key"
-    with patch("questionary.password", return_value=mock_password):
+
+    with (
+        patch("questionary.password", return_value=mock_password),
+        patch("rich.prompt.Confirm.ask", return_value=False),
+    ):
         api_key = get_api_key("openai", mock_config)
         assert api_key == "prompt-key"

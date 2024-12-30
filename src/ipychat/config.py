@@ -28,6 +28,7 @@ def get_default_config() -> Dict[str, Any]:
             "temperature": DEFAULT_MODEL.default_temperature,
         },
         "anthropic": {"api_key": ""},
+        "google": {"api_key": ""},
     }
 
     return DEFAULT_CONFIG
@@ -41,7 +42,7 @@ def get_api_key_from_env(provider: str) -> Optional[str]:
 def get_api_key(provider: str, ipychat_config: Dict[str, Any]) -> str:
     env_api_key = get_api_key_from_env(provider)
 
-    if env_api_key:
+    if env_api_key is not None:
         if Confirm.ask(
             f"Found {provider.upper()}_API_KEY in environment. Use this API key?",
             default=True,
@@ -53,7 +54,7 @@ def get_api_key(provider: str, ipychat_config: Dict[str, Any]) -> str:
         if provider in ipychat_config
         else None
     )
-    if config_api_key:
+    if config_api_key is not None:
         if Confirm.ask(f"Found existing {provider} API key. Keep it?", default=True):
             return config_api_key
 
@@ -81,7 +82,9 @@ def load_config() -> Dict[str, Any]:
         config = toml.load(f)
 
     current_provider = config["current"]["provider"]
-    config[current_provider]["api_key"] = get_api_key_from_env(current_provider)
+    env_api_key = get_api_key_from_env(current_provider)
+    if env_api_key is not None:
+        config[current_provider]["api_key"] = env_api_key
 
     return config
 

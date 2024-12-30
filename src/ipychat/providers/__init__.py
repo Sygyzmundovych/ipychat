@@ -4,11 +4,13 @@ from typing import Any, Dict, Type
 
 from .anthropic import AnthropicProvider
 from .base import BaseProvider
+from .google import GoogleProvider
 from .openai import OpenAIProvider
 
 PROVIDER_MAP = {
     "openai": OpenAIProvider,
     "anthropic": AnthropicProvider,
+    "google": GoogleProvider,
 }
 
 
