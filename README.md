@@ -12,7 +12,7 @@
 
 - **Context-Aware**: Automatically uses relevant context from your IPython session
 - **Rich Output**: Markdown-formatted responses with syntax highlighting
-- **Multiple AI Models**: Supports GPT-4o and Claude 3.5 Sonnet. Local models coming soon.
+- **Multiple AI Models**: Supports GPT-4o, Claude 3.5 Sonnet, and Gemini. Local models coming soon.
 - **Interactive Configuration**: Easy model switching and configuration through magic commands
 
 ## Installation
