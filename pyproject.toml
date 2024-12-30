@@ -44,3 +44,7 @@ dev = [
     "twine",
     "build",
 ]
+test = [
+    "pandas",
+    "numpy",
+]
