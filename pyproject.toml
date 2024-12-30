@@ -38,6 +38,7 @@ ipychat = "ipychat.cli:app"
 
 [project.optional-dependencies]
 dev = [
+    "ruff",
     "pytest",
     "pytest-cov",
     "twine",
