@@ -1,5 +1,5 @@
 <p align="center">
-   <img src="ipychat.png" width="640">
+   <img src="https://raw.githubusercontent.com/vinayak-mehta/ipychat/refs/heads/main/ipychat.png" width="640">
 </p>
 
 # ipychat: The AI IPython
