@@ -2,11 +2,11 @@
    <img src="https://raw.githubusercontent.com/vinayak-mehta/ipychat/refs/heads/main/ipychat.png" width="640">
 </p>
 
-# ipychat: An AI extension for IPython
+# ipychat: An AI extension for IPython that makes it work like [Cursor](https://cursor.sh/)
 
 [![Version](https://img.shields.io/pypi/v/ipychat.svg)](https://pypi.org/project/ipychat/) [![Python Versions](https://img.shields.io/pypi/pyversions/ipychat.svg)](https://pypi.org/project/ipychat/) [![License](https://img.shields.io/pypi/l/ipychat.svg)](https://pypi.org/project/ipychat/)
 
-**ipychat** is an AI extension for IPython that helps you understand, debug, and write better code faster.
+**ipychat** is an AI extension for IPython that helps you understand, debug, and write Python faster.
 
 <p align="center">
    <img src="https://raw.githubusercontent.com/vinayak-mehta/ipychat/refs/heads/main/demo.gif" width="640">
