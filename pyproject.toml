@@ -1,9 +1,9 @@
 [project]
 name = "ipychat"
-version = "0.3.12"
-description = "The AI IPython"
+version = "0.3.14"
+description = "The AI IPython - fork of ipychat"
 readme = "README.md"
-authors = [{name = "Vinayak Mehta", email = "vmehta94@gmail.com"}]
+authors = [{name = "Vinayak Mehta", email = "vmehta94@gmail.com"}, {name = "Sygyzmundovych", email = "sygyzmundovych@pm.me"}]
 license = {text = "Apache-2.0"}
 requires-python = ">=3.9,<4.0"
 classifiers = [
@@ -29,10 +29,7 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project.urls]
-Homepage = "https://github.com/vinayak-mehta/ipychat"
-Changelog = "https://github.com/vinayak-mehta/ipychat/releases"
-Issues = "https://github.com/vinayak-mehta/ipychat/issues"
-CI = "https://github.com/vinayak-mehta/ipychat/actions"
+Homepage = "https://github.com/Sygyzmundovych/ipychat"
 
 [project.scripts]
 ipychat = "ipychat.cli:app"
@@ -54,4 +51,3 @@ test = [
 pytest = "^8.3.4"
 pandas = "^2.2.3"
 ipykernel = "^6.29.5"
-

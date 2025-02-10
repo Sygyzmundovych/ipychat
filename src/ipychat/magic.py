@@ -21,7 +21,7 @@ console = Console()
 
 @magics_class
 class IPyChatMagics(Magics, Configurable):
-    debug = Bool(True, help="Start ipychat in debug mode").tag(config=True)
+    debug = Bool(False, help="Start ipychat in debug mode").tag(config=True)
 
     def __init__(self, shell):
         Magics.__init__(self, shell)
@@ -80,10 +80,10 @@ class IPyChatMagics(Magics, Configurable):
             if cmd.strip() and not cmd.startswith("%"):
                 history.append(f"In [{session_id}]: {cmd}")
 
-        system_prompt = "You are a helpful principal engineer and principal data scientist with access to the current IPython environment."
-        user_content = f"Recent IPython history:\n{'\n'.join(history[-5:])}\n\nContext:\n{context}\n\nQuestion: {query} \n Give your response in richly formatted markdown and make it concise."
-        #if self.debug:
-        logger.info(f"user_content: {user_content}")  # Changed to INFO level
+        system_prompt = f"You are a helpful principal engineer and an experienced principal data scientist with access to the current IPython environment. Give your responses in richly formatted markdown and make it concise."
+        user_content = f"Recent IPython history:\n{'\n'.join(history[-10:])}\n\nContext:\n{context}\n\nQuestion: {query} \n"
+        if self.debug:
+            logger.info(f"user_content: {user_content}")  # Changed to INFO level
         self.provider.stream_response(system_prompt, user_content)
         return None
 
