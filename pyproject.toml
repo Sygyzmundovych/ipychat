@@ -1,6 +1,6 @@
 [project]
 name = "ipychat"
-version = "0.2.1"
+version = "0.3.7"
 description = "The AI IPython"
 readme = "README.md"
 authors = [{name = "Vinayak Mehta", email = "vmehta94@gmail.com"}]
@@ -53,4 +53,5 @@ test = [
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.4"
 pandas = "^2.2.3"
+ipykernel = "^6.29.5"
 

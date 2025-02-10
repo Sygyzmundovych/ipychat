@@ -29,6 +29,7 @@ def get_default_config() -> Dict[str, Any]:
         },
         "anthropic": {"api_key": ""},
         "google": {"api_key": ""},
+        "sapgenaihub": {"api_key": ""},
     }
 
     return DEFAULT_CONFIG

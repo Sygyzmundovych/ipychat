@@ -6,11 +6,13 @@ from .anthropic import AnthropicProvider
 from .base import BaseProvider
 from .google import GoogleProvider
 from .openai import OpenAIProvider
+from .sapgenaihub import SAPGenAIHubProvider
 
 PROVIDER_MAP = {
     "openai": OpenAIProvider,
     "anthropic": AnthropicProvider,
     "google": GoogleProvider,
+    "sapgenaihub": SAPGenAIHubProvider,
 }
 
 
