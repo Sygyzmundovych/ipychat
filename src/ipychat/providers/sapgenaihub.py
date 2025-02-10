@@ -27,10 +27,11 @@ class SAPGenAIHubProvider(BaseProvider):
 
         template = Template(
             messages=[
-                SystemMessage("You are a helpful principal engineer and principal data scientist with access to the current IPython environment."),
-                UserMessage("Question: {{?query}} \n\n Give your response in richly formatted markdown and make it concise.")
+                SystemMessage("{{?system_prompt}}"),
+                UserMessage("{{?query}}")
             ],
             defaults=[
+                TemplateValue(name="system_prompt", value="You are a helpful principal engineer and principal data scientist with access to the current IPython environment."),
                 TemplateValue(name="query", value="What can I do in IPython?")
             ]
         )
@@ -51,6 +52,7 @@ class SAPGenAIHubProvider(BaseProvider):
         response = self.client.stream(
             config=self.client.config,
             template_values=[
+                TemplateValue(name="system_prompt", value=system_prompt),
                 TemplateValue(name="query", value=user_content)
             ],
             stream_options={

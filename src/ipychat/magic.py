@@ -76,7 +76,7 @@ class IPyChatMagics(Magics, Configurable):
                 history.append(f"In [{session_id}]: {cmd}")
 
         system_prompt = "You are a helpful principal engineer and principal data scientist with access to the current IPython environment."
-        user_content = f"Recent IPython history:\n{''.join(history[-5:])}\n\nContext:\n{context}\n\nQuestion: {query} Give your response in richly formatted markdown and make it concise."
+        user_content = f"Recent IPython history:\n{'\n'.join(history[-5:])}\n\nContext:\n{context}\n\nQuestion: {query} \n Give your response in richly formatted markdown and make it concise."
 
         self.provider.stream_response(system_prompt, user_content)
         return None
