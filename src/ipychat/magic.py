@@ -13,7 +13,7 @@ from .providers import get_provider
 from .ui import display_model_table, select_with_arrows
 
 # Set up logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 console = Console()
@@ -21,7 +21,7 @@ console = Console()
 
 @magics_class
 class IPyChatMagics(Magics, Configurable):
-    debug = Bool(False, help="Start ipychat in debug mode").tag(config=True)
+    debug = Bool(True, help="Start ipychat in debug mode").tag(config=True)
 
     def __init__(self, shell):
         Magics.__init__(self, shell)

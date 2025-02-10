@@ -1,6 +1,6 @@
 [project]
 name = "ipychat"
-version = "0.3.9"
+version = "0.3.10"
 description = "The AI IPython"
 readme = "README.md"
 authors = [{name = "Vinayak Mehta", email = "vmehta94@gmail.com"}]
