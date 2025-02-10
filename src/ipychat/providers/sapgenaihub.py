@@ -56,7 +56,7 @@ class SAPGenAIHubProvider(BaseProvider):
                 TemplateValue(name="query", value=user_content)
             ],
             stream_options={
-                'chunk_size': 10
+                'chunk_size': 1
             }
         )
 
