@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import logging
 from IPython.core.magic import Magics, line_magic, magics_class
 from rich.console import Console
 from traitlets import Bool
@@ -10,6 +11,10 @@ from .context import get_context_for_variables
 from .models import AVAILABLE_MODELS, get_model_by_name
 from .providers import get_provider
 from .ui import display_model_table, select_with_arrows
+
+# Set up logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 console = Console()
 
@@ -77,7 +82,8 @@ class IPyChatMagics(Magics, Configurable):
 
         system_prompt = "You are a helpful principal engineer and principal data scientist with access to the current IPython environment."
         user_content = f"Recent IPython history:\n{'\n'.join(history[-5:])}\n\nContext:\n{context}\n\nQuestion: {query} \n Give your response in richly formatted markdown and make it concise."
-
+        if self.debug:
+            logger.debug(f"user_content: {user_content}")
         self.provider.stream_response(system_prompt, user_content)
         return None
 
